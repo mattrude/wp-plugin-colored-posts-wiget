@@ -24,13 +24,15 @@ class colored_posts_wiget extends WP_Widget {
   function widget($args, $instance) {
     extract($args);
     $posts_per_page = empty($instance['posts_per_page']) ? '&nbsp;' : apply_filters('post_per_page', $instance['posts_per_page']);
-    query_posts('posts_per_page=$posts_per_page');
+    $number_rows = empty($instance['number_rows']) ? '&nbsp;' : apply_filters('number_rows', $instance['number_rows']);
+    $number_color_rows = $number_rows + 1;
+    query_posts('posts_per_page="$posts_per_page"');
     ?> 
     <div class="widget bookmarks widget-bookmarks">
     <?php
     if (have_posts()) : while (have_posts()) : the_post();
       $rowclass = 1 + $rowclass;
-      if ($rowclass == 6 ) {
+      if ($rowclass == $number_color_rows ) {
         $rowclass = 1;
       } ?>
       <div class="cpw-rowcolor-<?php echo $rowclass ?>"> 
@@ -46,13 +48,16 @@ class colored_posts_wiget extends WP_Widget {
   function update($new_instance, $old_instance) {
     $instance = $old_instance;
     $instance['posts_per_page'] = strip_tags($new_instance['posts_per_page']);
+    $instance['number_rows'] = strip_tags($new_instance['number_rows']);
     return $instance;
   }
 
   function form($instance) {
-    $title = strip_tags($instance['posts_per_page']);
+    $posts_per_page = strip_tags($instance['posts_per_page']);
+    $number_rows = strip_tags($instance['number_rows']);
     ?>
-    <p><label for="<?php echo $this->get_field_id('posts_per_page'); ?>"><?php _e('Posts per Page', 'colored-posts-wiget')?>:<input class="widefat" id="<?php echo $this->get_field_id('posts_per_page'); ?>" name="<?php echo $this->get_field_name('posts_per_page'); ?>" type="text" value="<?php echo attribute_escape($title); ?>" /></label></p>
+    <p><label for="<?php echo $this->get_field_id('posts_per_page'); ?>"><?php _e('Posts per Page', 'colored-posts-wiget')?>:<input class="widefat" id="<?php echo $this->get_field_id('posts_per_page'); ?>" name="<?php echo $this->get_field_name('posts_per_page'); ?>" type="text" value="<?php echo attribute_escape($posts_per_page); ?>" /></label></p>
+    <p><label for="<?php echo $this->get_field_id('number_rows'); ?>"><?php _e('Number of colors to display', 'colored-posts-wiget')?>:<input class="widefat" id="<?php echo $this->get_field_id('number_rows'); ?>" name="<?php echo $this->get_field_name('number_rows'); ?>" type="text" value="<?php echo attribute_escape($number_rows); ?>" /></label></p>
     <?php
   }
   
