@@ -25,15 +25,18 @@ class colored_posts_wiget extends WP_Widget {
     extract($args);
     $posts_per_page = empty($instance['posts_per_page']) ? '&nbsp;' : apply_filters('post_per_page', $instance['posts_per_page']);
     query_posts('posts_per_page=$posts_per_page');
-    ?> <div class="widget bookmarks widget-bookmarks"> <?php
+    ?> 
+    <div class="widget bookmarks widget-bookmarks">
+    <?php
     if (have_posts()) : while (have_posts()) : the_post();
       $rowclass = 1 + $rowclass;
       if ($rowclass == 6 ) {
         $rowclass = 1;
-      }
-      ?> <div class="cpw-rowcolor-<?php echo $rowclass ?>"> <?php
-        the_excerpt();
-      ?> </div> <?php
+      } ?>
+      <div class="cpw-rowcolor-<?php echo $rowclass ?>"> 
+        <?php the_excerpt(); ?>
+      </div>
+      <?php
     endwhile;
     endif;
       wp_reset_query();
